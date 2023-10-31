@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: confidential
+  datasource:
+    driver-class-name: ${database.driverClassName}
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+
+mybatis:
+  mapper-locations: classpath:/*.xml
+
