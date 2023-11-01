@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/")
-class TestController(val testService: TestService) {
+class TestController(private val testService: TestService) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(TestController::class.java)
