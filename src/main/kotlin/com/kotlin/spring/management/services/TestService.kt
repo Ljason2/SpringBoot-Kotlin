@@ -1,6 +1,6 @@
-package com.kotlin.spring.management.service
+package com.kotlin.spring.management.services
 
-import com.kotlin.spring.management.repository.mapper.TestMapper
+import com.kotlin.spring.management.repositories.mappers.TestMapper
 import org.springframework.stereotype.Service
 
 @Service

@@ -10,3 +10,22 @@ spring:
 mybatis:
   mapper-locations: classpath:/*.xml
 
+springdoc:
+  packages-to-scan: com.kotlin.spring.management.controllers
+  paths-to-match:
+    - /**
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    groups-order: DESC
+    operations-sorter: METHOD
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+
+server:
+  forward-headers-strategy: framework

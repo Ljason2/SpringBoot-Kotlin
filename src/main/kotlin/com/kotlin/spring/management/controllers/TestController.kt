@@ -1,6 +1,6 @@
-package com.kotlin.spring.management.controller
+package com.kotlin.spring.management.controllers
 
-import com.kotlin.spring.management.service.TestService
+import com.kotlin.spring.management.services.TestService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

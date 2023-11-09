@@ -1,4 +1,4 @@
-package com.kotlin.spring.management.repository.mapper
+package com.kotlin.spring.management.repositories.mappers
 
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Select

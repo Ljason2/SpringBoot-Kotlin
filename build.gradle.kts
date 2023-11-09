@@ -28,6 +28,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    // Jackson Module Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -50,6 +51,11 @@ dependencies {
     // Log4JDBC 1.2
     // https://mvnrepository.com/artifact/com.googlecode.log4jdbc/log4jdbc
     implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
+
+    // (Swagger) SpringDoc Starter - WebMVC 2.2.0
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -62,3 +68,4 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
