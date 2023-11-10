@@ -25,13 +25,28 @@ repositories {
 }
 
 dependencies {
+
+    // JDBC Driver For SpringBoot Starter
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+
+    // ThymeLeaf
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    // SpringBoot Starter Web
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // SpringBoot Dev Tools
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     // Jackson Module Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Kotlin Reflect
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // Spring Security (SpringBoot Starter Security 3.1.5)
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+    implementation("org.springframework.boot:spring-boot-starter-security:3.1.5")
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
