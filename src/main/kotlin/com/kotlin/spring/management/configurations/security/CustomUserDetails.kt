@@ -4,9 +4,9 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class CustomUserDetails(
-    var id: String?,
-    var password: String?,
-    var authorities: List<String>?
+    var id: String,
+    var credentials: String,
+    var authorities: List<String>
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -14,11 +14,11 @@ data class CustomUserDetails(
     }
 
     override fun getPassword(): String {
-        return this.password.toString()
+        return this.credentials
     }
 
     override fun getUsername(): String {
-        return this.id.toString()
+        return this.id
     }
 
     override fun isAccountNonExpired(): Boolean {

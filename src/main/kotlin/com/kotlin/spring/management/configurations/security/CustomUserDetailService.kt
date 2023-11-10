@@ -19,7 +19,7 @@ class CustomUserDetailService(private val userService: UserService) : UserDetail
 
         return CustomUserDetails(
             id = userObject.id,
-            password = userObject.password,
+            credentials = userObject.password,
             authorities = userObject.authorities
         )
     }
