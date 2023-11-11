@@ -9,12 +9,15 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
-class CustomAuthenticationProvider(private val customUserDetailService: CustomUserDetailService, private val passwordEncoder: PasswordEncoder) : AuthenticationProvider {
+class CustomAuthenticationProvider(
+    private val customUserDetailService: CustomUserDetailService,
+    private val passwordEncoder: PasswordEncoder
+) : AuthenticationProvider {
 
-    override fun authenticate(authentication: Authentication): Authentication? {
-        val id : String = authentication.name
-        val password : String = authentication.credentials.toString()
-        val userDetails : UserDetails = customUserDetailService.loadUserByUsername(id)
+    override fun authenticate(authentication: Authentication): Authentication {
+        val id = authentication.name
+        val password = authentication.credentials.toString()
+        val userDetails = customUserDetailService.loadUserByUsername(id)
 
         if (!passwordEncoder.matches(password, userDetails.password)) throw BadCredentialsException("Bad Credentials")
 
@@ -25,7 +28,7 @@ class CustomAuthenticationProvider(private val customUserDetailService: CustomUs
         )
     }
 
-    override fun supports(authentication: Class<*>?): Boolean {
-        return authentication == UsernamePasswordAuthenticationToken::class.java
+    override fun supports(authenticationClass: Class<*>): Boolean {
+        return authenticationClass == UsernamePasswordAuthenticationToken::class.java
     }
 }
