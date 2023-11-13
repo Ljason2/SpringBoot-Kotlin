@@ -13,9 +13,9 @@ data class UserRegistrationForm(
     @Schema(description = "이름")
     var name: String,
     @Schema(description = "회사")
-    var company: String,
+    var company: String?,
     @Schema(description = "직책")
-    var position: String,
+    var position: String?,
     @Schema(description = "전화번호")
     var phone: String,
     @Schema(description = "이메일")

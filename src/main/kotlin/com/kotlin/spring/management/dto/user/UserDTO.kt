@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 data class UserDTO(
     var id: String = "",
     var name: String = "",
-    var company: String?,
-    var position: String?,
+    var company: String? = null,
+    var position: String? = null,
     var phone: String = "",
     var email: String = "",
-    var inserted: LocalDateTime,
-    var certification: Boolean,
+    var inserted: LocalDateTime = LocalDateTime.now(),
+    var certification: Boolean = false,
     var roles: List<String> = listOf("")
 )
