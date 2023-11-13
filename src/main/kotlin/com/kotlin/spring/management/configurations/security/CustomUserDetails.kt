@@ -1,6 +1,7 @@
 package com.kotlin.spring.management.configurations.security
 
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 
@@ -17,7 +18,7 @@ data class CustomUserDetails(
 ): UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return this.authorities as MutableCollection<out GrantedAuthority>
+        return this.authorities.map { authority -> SimpleGrantedAuthority(authority) }.toMutableList()
     }
 
     override fun getPassword(): String {
