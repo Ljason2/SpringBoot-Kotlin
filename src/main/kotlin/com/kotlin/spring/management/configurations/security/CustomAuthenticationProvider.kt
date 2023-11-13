@@ -12,20 +12,23 @@ import org.springframework.stereotype.Component
 class CustomAuthenticationProvider(
     private val customUserDetailService: CustomUserDetailService,
     private val passwordEncoder: PasswordEncoder
-) : AuthenticationProvider {
+): AuthenticationProvider {
 
     override fun authenticate(authentication: Authentication): Authentication {
         val id = authentication.name
         val password = authentication.credentials.toString()
-        val userDetails = customUserDetailService.loadUserByUsername(id)
 
-        if (!passwordEncoder.matches(password, userDetails.password)) throw BadCredentialsException("Bad Credentials")
+        return customUserDetailService.loadUserByUsername(id).let { userDetails ->
+            if (!passwordEncoder.matches(password, userDetails.password)) {
+                throw BadCredentialsException("Bad Credentials")
+            }
 
-        return UsernamePasswordAuthenticationToken(
-            userDetails,
-            password,
-            userDetails.authorities
-        )
+            UsernamePasswordAuthenticationToken(
+                userDetails,
+                password,
+                userDetails.authorities
+            )
+        }
     }
 
     override fun supports(authenticationClass: Class<*>): Boolean {

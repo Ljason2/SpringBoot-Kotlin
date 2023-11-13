@@ -2,12 +2,19 @@ package com.kotlin.spring.management.configurations.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.time.LocalDateTime
 
 data class CustomUserDetails(
     var id: String,
+    var name: String,
+    var company: String?,
+    var position: String?,
+    var phone: String,
+    var inserted: LocalDateTime,
+    var lastLogin: LocalDateTime?,
     var credentials: String,
     var authorities: List<String>
-) : UserDetails {
+): UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return this.authorities as MutableCollection<out GrantedAuthority>
