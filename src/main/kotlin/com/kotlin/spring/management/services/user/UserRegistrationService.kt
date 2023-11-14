@@ -1,6 +1,7 @@
 package com.kotlin.spring.management.services.user
 
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
+import com.kotlin.spring.management.repositories.mappers.user.UserRegistrationMapper
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -27,7 +28,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserRegistrationService(
-    val userBasicService: UserBasicService
+    val userBasicService: UserBasicService,
+    val userRegistrationMapper: UserRegistrationMapper
 ) {
 
     // Regex List
@@ -48,6 +50,28 @@ class UserRegistrationService(
         processingUtil: ProcessingUtil,
         registrationForm: UserRegistrationForm
     ): Boolean {
+        when (validateUserRegistrationForm(processingUtil, registrationForm)) {
+            true -> {
+                processingUtil.addFunction(
+                    "DB 등록",
+                    processFunction = {
+                        userRegistrationMapper.insertNewUser(registrationForm) == 1
+                    },
+                    optional = false
+                )
+
+            }
+            false -> false
+        }
+
+        return false
+    }
+
+    fun validateUserRegistrationForm(
+        processingUtil: ProcessingUtil,
+        registrationForm: UserRegistrationForm
+    ): Boolean {
+
         // ID Duplication Check
         processingUtil.addFunction(
             "아이디 중복 체크",
@@ -55,7 +79,11 @@ class UserRegistrationService(
                 userBasicService.isUserExistsInDatabase(registrationForm.id)
             },
             false
-        ).let { 결과=false 일때, var  xx = failureObject 반환 }
+        ).let { process->
+            if (!process) {
+
+            }
+        }
 
         // ID Validation Check
         processingUtil.addFunction(
@@ -129,7 +157,7 @@ class UserRegistrationService(
             false
         )
 
-        return true
+        return processingUtil.compile(false)
     }
 
 

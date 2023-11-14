@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper
 interface UserRegistrationMapper {
 
     @Insert(" INSERT INTO users (id, name, company, position, phone, email) VALUES(#{id}, #{name}, #{company}, #{position}, #{phone}, #{email})")
-    fun insertNewUser(registrationForm: UserRegistrationForm)
+    fun insertNewUser(registrationForm: UserRegistrationForm): Int
 
     @Insert(" INSERT INTO user_credentials (id, password) VALUES(#{id}, #{encodedPassword})")
     fun insertNewUserCredentials(id: String, encodedPassword: String)

@@ -81,7 +81,7 @@ class ProcessingUtil(
         process: Boolean,
         optional: Boolean,
         message: String? = null
-    ): ProcessingUtil {
+    ): Boolean {
         val processResult = ProcessResult(
             processName = processName,
             result = process,
@@ -89,7 +89,7 @@ class ProcessingUtil(
             message = message
         )
         this["process${processCounter++}"] = processResult
-        return this
+        return processResult.result
     }
 
     fun addFunction(
@@ -97,7 +97,7 @@ class ProcessingUtil(
         processFunction: () -> Boolean,
         optional: Boolean,
         message: String? = null
-    ) {
+    ): Boolean {
         var processResult: ProcessResult
         try {
             val result = processFunction()
@@ -117,6 +117,7 @@ class ProcessingUtil(
             )
         }
         this["process${processCounter++}"] = processResult
+        return processResult.result
     }
 
     fun compile(
