@@ -3,6 +3,7 @@ package com.kotlin.spring.management.controllers.user
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.services.user.UserBasicService
 import com.kotlin.spring.management.services.user.UserRegistrationService
+import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
@@ -33,7 +34,7 @@ class UserRegistrationController(
 
     @GetMapping("/exists/{id}")
     fun isIdDuplicated(
-        @PathVariable(value = "id") id: String
+        @PathVariable(value = "id") id: String,
     ) {
 
     }
