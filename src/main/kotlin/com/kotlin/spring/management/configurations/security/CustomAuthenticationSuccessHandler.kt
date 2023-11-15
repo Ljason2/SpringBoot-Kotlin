@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class CustomAuthenticationSuccessHandler(private val logUtils: LogUtils): AuthenticationSuccessHandler {
-
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authentication: Authentication
     ) {
-
+        response.sendRedirect(request.contextPath + "/123")
     }
 
 }
