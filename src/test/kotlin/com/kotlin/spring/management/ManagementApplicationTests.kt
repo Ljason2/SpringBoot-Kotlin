@@ -1,46 +1,36 @@
 package com.kotlin.spring.management
 
+import com.kotlin.spring.management.dto.user.UserRegistrationForm
+import com.kotlin.spring.management.services.user.UserRegistrationService
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.lang.RuntimeException
 
 @SpringBootTest
-class ManagementApplicationTests {
+class ManagementApplicationTests() {
+
+
+    @Autowired
+    private lateinit var userRegistrationService: UserRegistrationService
 
     @Test
     fun contextLoads() {
 
-        var processingUtil = ProcessingUtil("TestProcess")
-        someLogin(processingUtil)
-        processingUtil.compile()
-    }
+        val registrationForm: UserRegistrationForm = UserRegistrationForm(
+            id = "123",
+            password = "1414",
+            passwordCheck = "14141",
+            name = "TEST",
+            company = "no",
+            position = "no",
+            phone = "no",
+            email = "no"
+        )
 
-    fun someLogin (processingUtil: ProcessingUtil){
-        var loginOne: Boolean = true
-        processingUtil.add("Logic1", loginOne, false)
-        var loginTwo: Boolean = true
-        processingUtil.add("Logic2", loginTwo, false)
-        var loginThree: Boolean = true
-        processingUtil.add("Logic3", loginThree, true)
-        var loginFour: Boolean = false
-        processingUtil.add("Logic4", loginFour, true)
-        processingUtil.addFunction(
-            "Logic5 Function",
-            processFunction = {
-                throw RuntimeException("Runtime Exception Occurred!!!")
-            },
-            true
-        )
-        processingUtil.addFunction(
-            "Logic6 Function",
-            processFunction = {
-                val testObject: String? = null
-                testObject!!.length // 여기서 NullPointerException 발생
-                true
-            },
-            false
-        )
+        val processingUtil = ProcessingUtil("User Register Process")
+        userRegistrationService.registerNewUser(processingUtil, registrationForm)
     }
 
 }

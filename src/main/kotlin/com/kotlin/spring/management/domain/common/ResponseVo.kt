@@ -1,8 +1,9 @@
 package com.kotlin.spring.management.domain.common
 
 data class ResponseVo(
-    val result: String?,
+    val status: String?,
     val message: String?,
-    val exceptionMessage: String?,
-    val data: Any?
+    val errorDetail: String?,
+    val data: Any?,
+    val timestamp: Long = System.currentTimeMillis()
 )

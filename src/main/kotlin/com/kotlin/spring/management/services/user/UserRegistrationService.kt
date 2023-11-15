@@ -1,5 +1,6 @@
 package com.kotlin.spring.management.services.user
 
+import com.kotlin.spring.management.domain.common.ServiceResponse
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.repositories.mappers.user.UserRegistrationMapper
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
@@ -49,39 +50,49 @@ class UserRegistrationService(
     fun registerNewUser(
         processingUtil: ProcessingUtil,
         registrationForm: UserRegistrationForm
-    ): Boolean {
-        when (validateUserRegistrationForm(processingUtil, registrationForm)) {
-            true -> {
-                processingUtil.addFunction(
-                    "DB 등록",
-                    processFunction = {
-                        userRegistrationMapper.insertNewUser(registrationForm) == 1
-                    },
-                    optional = false
-                )
+    ): ServiceResponse<Boolean> {
+        return ServiceResponse.simpleStatus(
+            {
+                if (validateUserRegistrationForm(processingUtil, registrationForm).extractStatus()) {
+                    processingUtil.addFunction(
+                        "DB 추가 작업",
+                        {
+                            userRegistrationMapper.insertNewUser(registrationForm) != null
+                        },
+                        false
+                    )
+                    processingUtil.compile()
+                } else {
+                    false
+                }
+            },
+            "성공적으로 등록 되었습니다.",
+            "사용자 등록 중 오류가 발생하였습니다."
+        )
 
-            }
-            false -> false
-        }
 
-        return false
     }
 
     fun validateUserRegistrationForm(
         processingUtil: ProcessingUtil,
         registrationForm: UserRegistrationForm
-    ): Boolean {
+    ): ServiceResponse<Boolean> {
 
         // ID Duplication Check
         processingUtil.addFunction(
             "아이디 중복 체크",
             processFunction = {
-                userBasicService.isUserExistsInDatabase(registrationForm.id)
+                userBasicService.isUserExistsInDatabase(registrationForm.id).extractStatus()
             },
             false
         ).let { process->
             if (!process) {
-
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "아이디 중복 체크 중 오류가 발생하였습니다.",
+                    processingUtil
+                )
             }
         }
 
@@ -157,7 +168,15 @@ class UserRegistrationService(
             false
         )
 
-        return processingUtil.compile(false)
+        return if (processingUtil.compile(true)) {
+            ServiceResponse.simpleStatus(
+                {true}
+            )
+        } else {
+            ServiceResponse.simpleStatus(
+                {false}
+            )
+        }
     }
 
 
