@@ -1,6 +1,10 @@
 package com.kotlin.spring.management
 
+import com.kotlin.spring.management.dto.user.UserDTO
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
+import com.kotlin.spring.management.dto.user.UserTestDTO
+import com.kotlin.spring.management.repositories.mappers.user.UserBasicMapper
+import com.kotlin.spring.management.services.user.UserBasicService
 import com.kotlin.spring.management.services.user.UserRegistrationService
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
 import org.junit.jupiter.api.Test
@@ -15,22 +19,45 @@ class ManagementApplicationTests() {
     @Autowired
     private lateinit var userRegistrationService: UserRegistrationService
 
+    @Autowired
+    private lateinit var userBasicService: UserBasicService
+
+    @Autowired
+    private lateinit var userBasicMapper: UserBasicMapper
+
     @Test
     fun contextLoads() {
 
         val registrationForm: UserRegistrationForm = UserRegistrationForm(
-            id = "123",
-            password = "1414",
-            passwordCheck = "14141",
-            name = "TEST",
+            id = "admin",
+            password = "wjsguscks1@",
+            passwordCheck = "wjsguscks1@",
+            name = "어드민",
             company = "no",
             position = "no",
-            phone = "no",
-            email = "no"
+            phone = "01020002269",
+            email = "example@example.com"
         )
 
         val processingUtil = ProcessingUtil("User Register Process")
         userRegistrationService.registerNewUser(processingUtil, registrationForm)
+    }
+
+    @Test
+    fun test() {
+        var userData: UserDTO = userBasicService.getUserById("admin").extractData()
+    }
+
+    @Test
+    fun test2(){
+        var userData: UserTestDTO = userBasicMapper.selectUserByIdTest("admin")
+        println(userData.id)
+    }
+
+    @Test
+    fun test3(){
+        var userData: UserDTO = userBasicMapper.selectUserById("admin")
+        println(userData.id)
     }
 
 }

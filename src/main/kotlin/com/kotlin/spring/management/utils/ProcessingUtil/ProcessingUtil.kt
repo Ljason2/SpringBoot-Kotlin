@@ -58,6 +58,7 @@ import kotlin.math.log
  * - add 및 addFunction 마지막 param 으로 message 추가 가능. 기본값 null 이기 때문에 사용하지 않아도 무관.
  *
  * updates for alpha 0.0.4
+ * - ServiceResponse 에서 사용 가능
  * - processUtil 에 process 추가시 log 출력
  * - discard function 추가 processUtil 을 종료하고 지금까지 실행 큐에 담긴 process 들의 log 출력 후 return false
  */
@@ -90,7 +91,7 @@ class ProcessingUtil(
             message = message
         )
         this["process${processCounter++}"] = processResult
-        logger.info("\nProcess added: $processName - Result: ${processResult.result}, Optional: ${processResult.optional}")
+        //logger.info("\nProcess added: $processName - Result: ${processResult.result}, Optional: ${processResult.optional}")
         return processResult.result
     }
 
@@ -109,7 +110,7 @@ class ProcessingUtil(
                 optional = optional,
                 message = message
             )
-            logger.info("\nProcess function added: $processName - Optional: ${processResult.optional}")
+            //logger.info("\nProcess function added: $processName - Optional: ${processResult.optional}")
         } catch (e: Exception) {
             processResult = ProcessResult(
                 processName = processName,
@@ -118,7 +119,7 @@ class ProcessingUtil(
                 message = message,
                 exceptionMessage = e.toString()
             )
-            logger.error("\nProcess function added with exception: $processName - Exception: ${e.message}")
+            //logger.error("\nProcess function added with exception: $processName - Exception: ${e.message}")
         }
         this["process${processCounter++}"] = processResult
         return processResult.result
@@ -136,7 +137,7 @@ class ProcessingUtil(
         var logMessage = this.getLogString()
         var discardLog = buildString {
             append("\n")
-            logMessage
+            append(logMessage)
             append("!!! Process[$methodName] Discarded Because Of ... ")
             append(discardMessage)
         }

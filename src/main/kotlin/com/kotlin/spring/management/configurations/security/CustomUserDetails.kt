@@ -11,7 +11,7 @@ data class CustomUserDetails(
     var company: String?,
     var position: String?,
     var phone: String,
-    var inserted: LocalDateTime,
+    var inserted: LocalDateTime?,
     var lastLogin: LocalDateTime?,
     var credentials: String,
     var authorities: List<String>

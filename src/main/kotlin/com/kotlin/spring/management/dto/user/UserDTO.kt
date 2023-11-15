@@ -1,8 +1,10 @@
 package com.kotlin.spring.management.dto.user
 
+import com.kotlin.spring.management.configurations.annotations.NoArgsConstructor
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
-
+@NoArgsConstructor
 data class UserDTO(
     var id: String = "",
     var name: String = "",
@@ -10,7 +12,8 @@ data class UserDTO(
     var position: String? = null,
     var phone: String = "",
     var email: String = "",
-    var inserted: LocalDateTime = LocalDateTime.now(),
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    var inserted: LocalDateTime? = null,
     var certification: Boolean = false,
     var roles: List<String> = listOf("")
 )

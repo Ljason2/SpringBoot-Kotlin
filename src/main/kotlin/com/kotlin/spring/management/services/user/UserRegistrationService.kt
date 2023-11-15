@@ -1,11 +1,12 @@
 package com.kotlin.spring.management.services.user
 
+import com.kotlin.spring.management.configurations.security.SecurityConfiguration
 import com.kotlin.spring.management.domain.common.ServiceResponse
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.repositories.mappers.user.UserRegistrationMapper
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  *     UserRegistrationForm
@@ -29,8 +30,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserRegistrationService(
-    val userBasicService: UserBasicService,
-    val userRegistrationMapper: UserRegistrationMapper
+    private val userBasicService: UserBasicService,
+    private val userRegistrationMapper: UserRegistrationMapper
 ) {
 
     // Regex List
@@ -47,31 +48,71 @@ class UserRegistrationService(
         private val REGEX_EMAIL = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
     }
 
+    @Transactional
     fun registerNewUser(
         processingUtil: ProcessingUtil,
         registrationForm: UserRegistrationForm
     ): ServiceResponse<Boolean> {
+        if (validateUserRegistrationForm(processingUtil, registrationForm).extractStatus()) {
+            processingUtil.addFunction(
+                "사용자 정보 DB 저장",
+                {
+                    userRegistrationMapper.insertNewUser(registrationForm) != null
+                },
+                false
+            ).let { process->
+                if (!process) {
+                    return ServiceResponse.simpleStatus(
+                        {false},
+                        null,
+                        "사용자 정보를 DB에 저장 하는도중 오류가 발생하였습니다.",
+                        processingUtil
+                    )
+                }
+            }
+            processingUtil.addFunction(
+                "비밀번호 암호화 후 DB 저장",
+                {
+                    var passwordEncoder = SecurityConfiguration().passwordEncoder()
+                    userRegistrationMapper.insertNewUserCredentials(registrationForm.id, passwordEncoder.encode(registrationForm.password))== 1
+                },
+                false
+            ).let { process->
+                if (!process) {
+                    return ServiceResponse.simpleStatus(
+                        {false},
+                        null,
+                        "사용자 비밀번호를 암호화 하여 DB에 저장 하는도중 오류가 발생하였습니다.",
+                        processingUtil
+                    )
+                }
+            }
+            processingUtil.addFunction(
+                "유저 권한 DB 저장",
+                {
+                    userRegistrationMapper.insertNewUserRoleGuest(registrationForm.id) == 1
+                },
+                false
+            ).let { process->
+                if (!process) {
+                    return ServiceResponse.simpleStatus(
+                        {false},
+                        null,
+                        "유저 권한을 DB에 저장하는 도중 오류가 발생하였습니다.",
+                        processingUtil
+                    )
+                }
+            }
+        }
         return ServiceResponse.simpleStatus(
             {
-                if (validateUserRegistrationForm(processingUtil, registrationForm).extractStatus()) {
-                    processingUtil.addFunction(
-                        "DB 추가 작업",
-                        {
-                            userRegistrationMapper.insertNewUser(registrationForm) != null
-                        },
-                        false
-                    )
-                    processingUtil.compile()
-                } else {
-                    false
-                }
+                processingUtil.compile(true)
             },
             "성공적으로 등록 되었습니다.",
             "사용자 등록 중 오류가 발생하였습니다."
         )
-
-
     }
+
 
     fun validateUserRegistrationForm(
         processingUtil: ProcessingUtil,
@@ -82,7 +123,7 @@ class UserRegistrationService(
         processingUtil.addFunction(
             "아이디 중복 체크",
             processFunction = {
-                userBasicService.isUserExistsInDatabase(registrationForm.id).extractStatus()
+                !userBasicService.isUserExistsInDatabase(registrationForm.id).extractStatus()
             },
             false
         ).let { process->
@@ -103,7 +144,16 @@ class UserRegistrationService(
                 registrationForm.id.matches(REGEX_ID)
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "아이디 작성 규칙을 만족하지 못했습니다.",
+                    processingUtil
+                )
+            }
+        }
 
         // Password & Password Check Equals
         processingUtil.addFunction(
@@ -112,7 +162,16 @@ class UserRegistrationService(
                 registrationForm.password == registrationForm.passwordCheck
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "비밀번호와 비밀번호 확인값이 일치 하지 않습니다.",
+                    processingUtil
+                )
+            }
+        }
 
         // Password Validation Check
         processingUtil.addFunction(
@@ -121,7 +180,16 @@ class UserRegistrationService(
                 registrationForm.password.matches(REGEX_PASSWORD)
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "비밀번호 작성 조건이 일치하지 않습니다.",
+                    processingUtil
+                )
+            }
+        }
 
         // Name Validation Check
         processingUtil.addFunction(
@@ -130,7 +198,16 @@ class UserRegistrationService(
                 registrationForm.name.matches(REGEX_NAME)
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "이름은 1글자 이상의 한글 문자여야 합니다.",
+                    processingUtil
+                )
+            }
+        }
 
         // Company
         processingUtil.addFunction(
@@ -154,10 +231,19 @@ class UserRegistrationService(
         processingUtil.addFunction(
             "전화번호 정규식 만족",
             processFunction = {
-                registrationForm.email.matches(REGEX_PHONE_NUMBER)
+                registrationForm.phone.matches(REGEX_PHONE_NUMBER)
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "전화번호의 경우 02로 시작하는 8자리이상 혹은 그외 9자리 이상의 숫자이며 하이픈을 제외하여야 합니다.",
+                    processingUtil
+                )
+            }
+        }
 
         // E-Mail Validation Check
         processingUtil.addFunction(
@@ -166,9 +252,18 @@ class UserRegistrationService(
                 registrationForm.email.matches(REGEX_EMAIL)
             },
             false
-        )
+        ).let { process->
+            if (!process) {
+                return ServiceResponse.simpleStatus(
+                    {false},
+                    null,
+                    "올바른 이메일 형식이 아닙니다.",
+                    processingUtil
+                )
+            }
+        }
 
-        return if (processingUtil.compile(true)) {
+        return if (processingUtil.compile()) {
             ServiceResponse.simpleStatus(
                 {true}
             )

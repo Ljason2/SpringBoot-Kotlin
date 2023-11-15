@@ -1,6 +1,7 @@
 package com.kotlin.spring.management.repositories.mappers.user
 
 import com.kotlin.spring.management.dto.user.UserDTO
+import com.kotlin.spring.management.dto.user.UserTestDTO
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Select
 
@@ -18,5 +19,8 @@ interface UserBasicMapper {
 
     @Select(" SELECT id, name, company, position, phone, email, inserted, certification FROM users WHERE id = #{id}")
     fun selectUserById(id: String): UserDTO
+
+    @Select(" SELECT id FROM users WHERE id = #{id}")
+    fun selectUserByIdTest(id: String): UserTestDTO
 
 }

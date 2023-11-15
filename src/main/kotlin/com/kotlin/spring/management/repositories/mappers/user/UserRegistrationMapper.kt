@@ -11,9 +11,9 @@ interface UserRegistrationMapper {
     fun insertNewUser(registrationForm: UserRegistrationForm): Int
 
     @Insert(" INSERT INTO user_credentials (id, password) VALUES(#{id}, #{encodedPassword})")
-    fun insertNewUserCredentials(id: String, encodedPassword: String)
+    fun insertNewUserCredentials(id: String, encodedPassword: String): Int
 
     @Insert(" INSERT INTO user_roles (id, role) VALUES(#{id}, 'ROLE_GUEST')")
-    fun insertNewUserRoleGuest(id: String)
+    fun insertNewUserRoleGuest(id: String): Int
 
 }

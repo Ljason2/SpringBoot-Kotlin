@@ -1,6 +1,9 @@
 package com.kotlin.spring.management.domain.common
 
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
+import org.apache.ibatis.exceptions.PersistenceException
+import org.mybatis.spring.MyBatisSystemException
+import org.slf4j.LoggerFactory
 import org.springframework.ui.Model
 
 class ServiceResponse<T>(
@@ -12,6 +15,9 @@ class ServiceResponse<T>(
 ): ResponseAdapter {
 
     companion object {
+
+        private val logger = LoggerFactory.getLogger(ServiceResponse::class.java)
+
         fun <T> generateData(
             dataSupplier: () -> T?,
             customSuccessMessage: String? = null,
@@ -37,11 +43,19 @@ class ServiceResponse<T>(
                     )
                 }
 
+            } catch (e: MyBatisSystemException) {
+                processingUtil?.discard(e.localizedMessage,)
+                ServiceResponse(
+                    status = "error",
+                    message = "MyBatis Error Occurred Check The Queries",
+                    errorDetail = e.localizedMessage,
+                    data = null
+                )
             } catch (e: Exception) {
                 processingUtil?.discard(e.localizedMessage,)
                 ServiceResponse(
                     status = "error",
-                    message = "Error Occurred While Processing Data",
+                    message = customFailureMessage ?: "Error Occurred While Processing Data",
                     errorDetail = e.localizedMessage,
                     data = null
                 )
@@ -79,7 +93,7 @@ class ServiceResponse<T>(
                 processingUtil?.discard(e.localizedMessage,)
                 ServiceResponse(
                     status = "error",
-                    message = "Error Occurred While Processing Logic",
+                    message = customFailureMessage ?: "Error Occurred While Processing Logic",
                     errorDetail = e.localizedMessage,
                     data = null,
                     booleanAble = true
@@ -90,11 +104,11 @@ class ServiceResponse<T>(
 
     fun extractData(): T {
         if (this.data != null) {
-            return this.data
+            return this.data as T
         } else {
-            throw Exception(this.errorDetail)
+            logger.error("Error : ${this.errorDetail}")
+            throw Exception(this.message)
         }
-
     }
 
     fun extractStatus(): Boolean {
