@@ -10,6 +10,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
 
     fun isUserExistsInDatabase(id: String): ServiceResponse<Boolean> {
         return ServiceResponse.simpleStatus(
+            "UserBasicService - isUserExistsInDatabase",
             {
                 userBasicMapper.countUserId(id) > 0
             },
@@ -20,6 +21,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
 
     fun getUserById(id: String): ServiceResponse<UserDTO> {
         return ServiceResponse.generateData(
+            "UserBasicService - getUserById",
             {
                 userBasicMapper.selectUserById(id)?.apply {
                     this.roles = getUserRolesById(this.id).extractData()
@@ -32,6 +34,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
 
     fun getUserCredentialsById(id: String): ServiceResponse<String>{
         return ServiceResponse.generateData(
+            "UserBasicService - getUserCredentialsById",
             {
                 userBasicMapper.selectUserCredentialsById(id)
             },
@@ -43,6 +46,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
 
     fun getUserRolesById(id: String): ServiceResponse<List<String>>{
         return ServiceResponse.generateData(
+            "UserBasicService - getUserRolesById",
             {
                 userBasicMapper.selectUserRolesById(id)
             },

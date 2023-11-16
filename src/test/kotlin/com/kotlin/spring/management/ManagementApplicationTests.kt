@@ -2,7 +2,6 @@ package com.kotlin.spring.management
 
 import com.kotlin.spring.management.dto.user.UserDTO
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
-import com.kotlin.spring.management.dto.user.UserTestDTO
 import com.kotlin.spring.management.repositories.mappers.user.UserBasicMapper
 import com.kotlin.spring.management.services.user.UserBasicService
 import com.kotlin.spring.management.services.user.UserRegistrationService
@@ -29,7 +28,7 @@ class ManagementApplicationTests() {
     fun contextLoads() {
 
         val registrationForm: UserRegistrationForm = UserRegistrationForm(
-            id = "admin",
+            id = "admin2",
             password = "wjsguscks1@",
             passwordCheck = "wjsguscks1@",
             name = "어드민",
@@ -50,14 +49,10 @@ class ManagementApplicationTests() {
 
     @Test
     fun test2(){
-        var userData: UserTestDTO = userBasicMapper.selectUserByIdTest("admin")
-        println(userData.id)
-    }
-
-    @Test
-    fun test3(){
         var userData: UserDTO = userBasicMapper.selectUserById("admin")
         println(userData.id)
     }
+
+
 
 }

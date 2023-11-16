@@ -63,6 +63,7 @@ class UserRegistrationService(
             ).let { process->
                 if (!process) {
                     return ServiceResponse.simpleStatus(
+                        "UserRegistrationService - registerNewUser",
                         {false},
                         null,
                         "사용자 정보를 DB에 저장 하는도중 오류가 발생하였습니다.",
@@ -80,6 +81,7 @@ class UserRegistrationService(
             ).let { process->
                 if (!process) {
                     return ServiceResponse.simpleStatus(
+                        "UserRegistrationService - registerNewUser",
                         {false},
                         null,
                         "사용자 비밀번호를 암호화 하여 DB에 저장 하는도중 오류가 발생하였습니다.",
@@ -96,6 +98,7 @@ class UserRegistrationService(
             ).let { process->
                 if (!process) {
                     return ServiceResponse.simpleStatus(
+                        "UserRegistrationService - registerNewUser",
                         {false},
                         null,
                         "유저 권한을 DB에 저장하는 도중 오류가 발생하였습니다.",
@@ -105,6 +108,7 @@ class UserRegistrationService(
             }
         }
         return ServiceResponse.simpleStatus(
+            "UserRegistrationService - registerNewUser",
             {
                 processingUtil.compile(true)
             },
@@ -129,6 +133,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "아이디 중복 체크 중 오류가 발생하였습니다.",
@@ -147,6 +152,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "아이디 작성 규칙을 만족하지 못했습니다.",
@@ -165,6 +171,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "비밀번호와 비밀번호 확인값이 일치 하지 않습니다.",
@@ -183,6 +190,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "비밀번호 작성 조건이 일치하지 않습니다.",
@@ -201,6 +209,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "이름은 1글자 이상의 한글 문자여야 합니다.",
@@ -237,6 +246,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "전화번호의 경우 02로 시작하는 8자리이상 혹은 그외 9자리 이상의 숫자이며 하이픈을 제외하여야 합니다.",
@@ -255,6 +265,7 @@ class UserRegistrationService(
         ).let { process->
             if (!process) {
                 return ServiceResponse.simpleStatus(
+                    "UserRegistrationService - validateUserRegistrationForm",
                     {false},
                     null,
                     "올바른 이메일 형식이 아닙니다.",
@@ -265,10 +276,12 @@ class UserRegistrationService(
 
         return if (processingUtil.compile()) {
             ServiceResponse.simpleStatus(
+                "UserRegistrationService - validateUserRegistrationForm",
                 {true}
             )
         } else {
             ServiceResponse.simpleStatus(
+                "UserRegistrationService - validateUserRegistrationForm",
                 {false}
             )
         }

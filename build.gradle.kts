@@ -9,7 +9,7 @@ plugins {
 }
 
 noArg {
-    annotation("com.kotlin.spring.management.configurations.annotations.NoArgsConstructor")
+    annotation("com.kotlin.spring.management.annotations.NoArgsConstructor")
 }
 
 group = "com.kotlin.spring"

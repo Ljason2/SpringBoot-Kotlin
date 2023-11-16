@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 전역 로그 레벨을 INFO로 설정 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %replace(%logger{0}){'com.kotlin.spring.management.', ''} - %msg%n</pattern>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+        </encoder>
+    </appender>
+
+
+    <!-- log4jdbc 로그 레벨을 WARN로 조정 -->
+    <logger name="jdbc.sqlonly" level="WARN"/>
+    <logger name="jdbc.sqltiming" level="WARN"/>
+    <logger name="jdbc.audit" level="WARN"/>
+    <logger name="jdbc.resultset" level="WARN"/>
+    <logger name="jdbc.connection" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+
+</configuration>
