@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ThymeLeaf</title>
-
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 </head>
 <body>
 White Page
@@ -13,5 +13,15 @@ White Page
     <span th:text="${#authentication?.principal?.id} ?: 'No User'">[Username]</span>
 </div>
 
+<button id="test-btn">test</button>
+
+
+<script th:inline="javascript">
+    const contextPath = /*[[@{/}]]*/ '';
+    $("#test-btn").click(function (){
+        alert(contextPath)
+    })
+</script>
+
 </body>
-</html> 
+</html>

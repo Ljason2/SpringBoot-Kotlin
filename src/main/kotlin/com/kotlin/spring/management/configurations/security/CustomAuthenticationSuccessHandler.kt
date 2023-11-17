@@ -8,12 +8,15 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component
 
 @Component
-class CustomAuthenticationSuccessHandler(private val logUtils: LogUtils): AuthenticationSuccessHandler {
+class CustomAuthenticationSuccessHandler(
+    private val logUtils: LogUtils
+): AuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authentication: Authentication
     ) {
+        logUtils.recordLoginSuccessLog(request, authentication.principal as CustomUserDetails)
         response.sendRedirect(request.contextPath + "/")
     }
 

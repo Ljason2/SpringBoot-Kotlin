@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"/></script>
 </head>
 <body>
-
   <form th:action="@{/login}" method="post">
     <div>
       <label for="username">Username:</label>
@@ -22,6 +22,5 @@
       <a th:href="@{/user/register}">SignIn</a>
     </div>
   </form>
-
 </body>
 </html>

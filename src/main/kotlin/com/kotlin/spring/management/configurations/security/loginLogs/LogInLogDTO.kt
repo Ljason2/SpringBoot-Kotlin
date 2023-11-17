@@ -5,12 +5,12 @@ import java.time.LocalDateTime
 
 @NoArgsConstructor
 data class LogInLogDTO(
-    var record: Int,
-    var id: String,
-    var failureId: String,
-    var timestamp: LocalDateTime,
+    var record: Int? = null,
+    var id: String? = null,
+    var failureId: String? = null,
+    var timestamp: LocalDateTime? = LocalDateTime.now(),
     var ip: String,
     var device: String,
     var status: String,
-    var company: String
+    var company: String? = null
 )

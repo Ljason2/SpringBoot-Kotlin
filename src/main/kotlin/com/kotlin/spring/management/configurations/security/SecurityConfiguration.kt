@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-// Import this
-import org.springframework.security.config.annotation.web.invoke
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-    private val customUserDetailsService: CustomUserDetailService
+    private val customUserDetailsService: CustomUserDetailService,
+    private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler,
+    private val customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
 ) {
 
     @Autowired
@@ -34,6 +34,8 @@ class SecurityConfiguration(
             }
             formLogin {
                 loginPage = "/login"
+                authenticationSuccessHandler = customAuthenticationSuccessHandler
+                authenticationFailureHandler = customAuthenticationFailureHandler
             }
             logout {
                 logoutUrl = "/logout"
