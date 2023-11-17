@@ -1,4 +1,4 @@
-package com.kotlin.spring.management.domain.common
+package com.kotlin.spring.management.domains.common
 
 data class ResponseVo(
     val status: String?,

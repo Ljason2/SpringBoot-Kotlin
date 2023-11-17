@@ -1,7 +1,6 @@
-package com.kotlin.spring.management.domain.common
+package com.kotlin.spring.management.domains.common
 
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
-import org.apache.ibatis.exceptions.PersistenceException
 import org.mybatis.spring.MyBatisSystemException
 import org.slf4j.LoggerFactory
 import org.springframework.ui.Model

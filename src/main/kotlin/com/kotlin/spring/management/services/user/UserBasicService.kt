@@ -1,6 +1,6 @@
 package com.kotlin.spring.management.services.user
 
-import com.kotlin.spring.management.domain.common.ServiceResponse
+import com.kotlin.spring.management.domains.common.ServiceResponse
 import com.kotlin.spring.management.dto.user.UserDTO
 import com.kotlin.spring.management.repositories.mappers.user.UserBasicMapper
 import org.springframework.stereotype.Service
@@ -32,7 +32,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
         )
     }
 
-    fun getUserCredentialsById(id: String): ServiceResponse<String>{
+    fun getUserCredentialsById(id: String): ServiceResponse<String> {
         return ServiceResponse.generateData(
             "UserBasicService - getUserCredentialsById",
             {
@@ -44,7 +44,7 @@ class UserBasicService(private val userBasicMapper: UserBasicMapper) {
 
     }
 
-    fun getUserRolesById(id: String): ServiceResponse<List<String>>{
+    fun getUserRolesById(id: String): ServiceResponse<List<String>> {
         return ServiceResponse.generateData(
             "UserBasicService - getUserRolesById",
             {

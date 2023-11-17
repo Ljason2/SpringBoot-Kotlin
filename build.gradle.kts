@@ -52,6 +52,8 @@ dependencies {
     // Spring Security (SpringBoot Starter Security 3.1.5)
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
     implementation("org.springframework.boot:spring-boot-starter-security:3.1.5")
+    implementation("org.springframework.security:spring-security-config")
+    implementation("org.springframework.security:spring-security-web")
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

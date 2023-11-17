@@ -1,5 +1,6 @@
 package com.kotlin.spring.management.configurations.security
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class CustomAuthenticationProvider(
-    private val customUserDetailService: CustomUserDetailService,
-    private val passwordEncoder: PasswordEncoder
+    private val customUserDetailService: CustomUserDetailService
 ): AuthenticationProvider {
+
+    @Autowired
+    lateinit var passwordEncoder: PasswordEncoder
 
     override fun authenticate(authentication: Authentication): Authentication {
         val id = authentication.name

@@ -8,5 +8,10 @@
 </head>
 <body>
 White Page
+
+<div>
+    <span th:text="${#authentication?.principal?.id} ?: 'No User'">[Username]</span>
+</div>
+
 </body>
-</html>
+</html> 

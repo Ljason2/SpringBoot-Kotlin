@@ -1,13 +1,13 @@
 package com.kotlin.spring.management.controllers.user
 
-import com.kotlin.spring.management.domain.common.ResponseVo
+import com.kotlin.spring.management.domains.common.ResponseVo
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.services.user.UserBasicService
 import com.kotlin.spring.management.services.user.UserRegistrationService
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
+import com.kotlin.spring.management.utils.ResponseEntityGenerator.ResponseEntityGenerator
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,7 +26,7 @@ class UserRegistrationController(
 ) {
 
 
-    @GetMapping("/")
+    @GetMapping
     fun registrationPage(): String {
         return "signIn"
     }
@@ -48,7 +48,7 @@ class UserRegistrationController(
         @PathVariable(value = "id") id: String,
     ): ResponseEntity<ResponseVo> {
         val response = userBasicService.isUserExistsInDatabase(id).adaptForApi()
-        return ResponseEntity(response, HttpStatus.OK)
+        return ResponseEntityGenerator.generateResponse(response)
     }
 
 }

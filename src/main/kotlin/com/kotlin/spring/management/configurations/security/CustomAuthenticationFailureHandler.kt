@@ -1,6 +1,6 @@
 package com.kotlin.spring.management.configurations.security
 
-import com.kotlin.spring.management.configurations.security.logs.LogUtils
+import com.kotlin.spring.management.utils.LogUtils.LogUtils
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.AuthenticationException

@@ -1,10 +1,12 @@
 package com.kotlin.spring.management.services.user
 
 import com.kotlin.spring.management.configurations.security.SecurityConfiguration
-import com.kotlin.spring.management.domain.common.ServiceResponse
+import com.kotlin.spring.management.domains.common.ServiceResponse
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.repositories.mappers.user.UserRegistrationMapper
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,6 +35,9 @@ class UserRegistrationService(
     private val userBasicService: UserBasicService,
     private val userRegistrationMapper: UserRegistrationMapper
 ) {
+
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
 
     // Regex List
     companion object {
@@ -74,7 +79,6 @@ class UserRegistrationService(
             processingUtil.addFunction(
                 "비밀번호 암호화 후 DB 저장",
                 {
-                    var passwordEncoder = SecurityConfiguration().passwordEncoder()
                     userRegistrationMapper.insertNewUserCredentials(registrationForm.id, passwordEncoder.encode(registrationForm.password))== 1
                 },
                 false
