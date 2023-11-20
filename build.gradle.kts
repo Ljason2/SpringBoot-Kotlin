@@ -54,7 +54,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security:3.1.5")
     implementation("org.springframework.security:spring-security-config")
     implementation("org.springframework.security:spring-security-web")
-
+    // JJWT - API 0.12.3
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    // JJWT - Impl 0.12.3
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    // JJWT - Extension(Jackson Databind)
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
 
 

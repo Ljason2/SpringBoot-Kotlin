@@ -1,5 +1,6 @@
 package com.kotlin.spring.management.configurations.security
 
+import com.kotlin.spring.management.configurations.filters.CustomLoginRedirectionFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @EnableWebSecurity
@@ -28,9 +31,16 @@ class SecurityConfiguration(
     @Bean
     open fun configureSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
+            csrf {
+                disable()
+            }
             authorizeRequests {
                 authorize("/login", permitAll)
+                authorize("/api/login", permitAll)
                 authorize("/user/register/**", permitAll)
+                authorize("/swagger-ui.html", permitAll)
+                authorize("/swagger-ui/**", permitAll)
+                authorize("/**", authenticated)
             }
             formLogin {
                 loginPage = "/login"
@@ -39,11 +49,15 @@ class SecurityConfiguration(
             }
             logout {
                 logoutUrl = "/logout"
+                logoutRequestMatcher = AntPathRequestMatcher("/logout", "GET")
                 logoutSuccessUrl = "/login"
+                invalidateHttpSession = true
+                deleteCookies("JSESSIONID")
             }
             httpBasic {
 
             }
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(CustomLoginRedirectionFilter())
         }
         return http.build()
     }

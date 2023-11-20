@@ -1,6 +1,6 @@
 package com.kotlin.spring.management.controllers.user
 
-import com.kotlin.spring.management.domains.common.ResponseVo
+import com.kotlin.spring.management.domains.common.apiResponse.ResponseVo
 import com.kotlin.spring.management.dto.user.UserRegistrationForm
 import com.kotlin.spring.management.services.user.UserBasicService
 import com.kotlin.spring.management.services.user.UserRegistrationService

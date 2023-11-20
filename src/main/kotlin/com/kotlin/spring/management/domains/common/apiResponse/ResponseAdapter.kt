@@ -1,6 +1,5 @@
-package com.kotlin.spring.management.domains.common
+package com.kotlin.spring.management.domains.common.apiResponse
 
-import com.kotlin.spring.management.domains.common.ResponseVo
 import org.springframework.ui.Model
 
 interface ResponseAdapter {

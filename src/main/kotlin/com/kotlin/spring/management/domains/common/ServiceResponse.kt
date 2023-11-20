@@ -1,5 +1,7 @@
 package com.kotlin.spring.management.domains.common
 
+import com.kotlin.spring.management.domains.common.apiResponse.ResponseAdapter
+import com.kotlin.spring.management.domains.common.apiResponse.ResponseVo
 import com.kotlin.spring.management.utils.ProcessingUtil.ProcessingUtil
 import org.mybatis.spring.MyBatisSystemException
 import org.slf4j.LoggerFactory
@@ -65,6 +67,19 @@ class ServiceResponse<T>(
                     data = null
                 )
             }
+        }
+
+        fun <T> simpleError(
+            serviceName: String? = null,
+            customFailureMessage: String? = null,
+        ) : ServiceResponse<T> {
+            return ServiceResponse(
+                serviceName = serviceName,
+                status = "error",
+                message = customFailureMessage ?: "Error Occurred While Processing Data",
+                errorDetail = customFailureMessage,
+                data = null
+            )
         }
 
         fun <Boolean> simpleStatus(

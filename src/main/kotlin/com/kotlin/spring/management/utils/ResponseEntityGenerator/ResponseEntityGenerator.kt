@@ -1,6 +1,6 @@
 package com.kotlin.spring.management.utils.ResponseEntityGenerator
 
-import com.kotlin.spring.management.domains.common.ResponseVo
+import com.kotlin.spring.management.domains.common.apiResponse.ResponseVo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
