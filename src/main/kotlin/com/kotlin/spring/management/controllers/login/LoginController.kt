@@ -36,5 +36,18 @@ class LoginController(private val userLoginService: UserLoginService) {
         return ResponseEntityGenerator.generateResponse(response)
     }
 
+    @Operation(summary = "Token Validation Check", description = "Jwt Token 이 정상일시 success 를 리턴합니다.")
+    @PostMapping(path = ["/api/validate"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseBody
+    fun apiTokenValidationCheck(): ResponseEntity<ResponseVo> {
+        val response = ResponseVo(
+            status = "success",
+            message = "Verified Token",
+            null,
+            null
+        )
+        return ResponseEntityGenerator.generateResponse(response)
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.kotlin.spring.management.configurations.security
+package com.kotlin.spring.management.configurations.security.userDetails
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

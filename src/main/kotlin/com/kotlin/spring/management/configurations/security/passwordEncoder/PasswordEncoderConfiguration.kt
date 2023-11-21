@@ -1,4 +1,4 @@
-package com.kotlin.spring.management.configurations.security
+package com.kotlin.spring.management.configurations.security.passwordEncoder
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

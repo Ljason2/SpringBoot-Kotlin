@@ -10,35 +10,26 @@ import org.apache.commons.logging.LogFactory
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.filter.OncePerRequestFilter
 
-class CustomLoginRedirectionFilter : Filter {
+class CustomLoginRedirectionFilter : OncePerRequestFilter() {
     private val logger = LogFactory.getLog(CustomLoginRedirectionFilter::class.java)
 
-    override fun doFilter(
-        request: ServletRequest,
-        response: ServletResponse,
-        chain: FilterChain
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
     ) {
         val httpRequest = request as HttpServletRequest
         val httpResponse = response as HttpServletResponse
         val authentication: Authentication? = SecurityContextHolder.getContext().authentication
-
-/*        logger.info("Request URI is: ${httpRequest.requestURI}")
-        if (authentication != null) {
-            logger.info("Authentication class: ${authentication.javaClass}")
-            logger.info("Is authenticated: ${authentication.isAuthenticated}")
-        } else {
-            logger.info("Authentication is null")
-        }*/
-
         if ("/login" == httpRequest.requestURI) {
             if (authentication != null && authentication.isAuthenticated && authentication !is AnonymousAuthenticationToken) {
-                logger.info("Redirecting to / because the user is already authenticated.")
+                logger.info("Redirecting to main ContextPath because the user is already authenticated.")
                 httpResponse.sendRedirect("/")
                 return
             }
         }
-
-        chain.doFilter(request, response)
+        filterChain.doFilter(request, response)
     }
 }

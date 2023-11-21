@@ -1,6 +1,9 @@
 package com.kotlin.spring.management.configurations.security
 
 import com.kotlin.spring.management.configurations.filters.CustomLoginRedirectionFilter
+import com.kotlin.spring.management.configurations.filters.JsonWebTokenFilter
+import com.kotlin.spring.management.configurations.security.jwt.JwtProvider
+import com.kotlin.spring.management.configurations.security.userDetails.CustomUserDetailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,20 +13,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.intercept.AuthorizationFilter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
     private val customUserDetailsService: CustomUserDetailService,
     private val customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler,
-    private val customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+    private val customAuthenticationFailureHandler: CustomAuthenticationFailureHandler,
+    private val jwtProvider: JwtProvider
 ) {
 
     @Autowired
-    fun configureAuthenticationManagerBuilder(auth: AuthenticationManagerBuilder, passwordEncoder: PasswordEncoder) {
-        auth
+    fun configureAuthenticationManagerBuilder(authenticationManagerBuilder: AuthenticationManagerBuilder, passwordEncoder: PasswordEncoder) {
+        authenticationManagerBuilder
             .userDetailsService(customUserDetailsService)
             .passwordEncoder(passwordEncoder)
     }
@@ -34,7 +40,7 @@ class SecurityConfiguration(
             csrf {
                 disable()
             }
-            authorizeRequests {
+            authorizeHttpRequests {
                 authorize("/login", permitAll)
                 authorize("/api/login", permitAll)
                 authorize("/user/register/**", permitAll)
@@ -58,7 +64,9 @@ class SecurityConfiguration(
 
             }
             addFilterBefore<UsernamePasswordAuthenticationFilter>(CustomLoginRedirectionFilter())
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(JsonWebTokenFilter(jwtProvider))
         }
+
         return http.build()
     }
 

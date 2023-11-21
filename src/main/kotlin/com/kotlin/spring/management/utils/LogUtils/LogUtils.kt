@@ -1,11 +1,10 @@
 package com.kotlin.spring.management.utils.LogUtils
 
-import com.kotlin.spring.management.configurations.security.CustomUserDetails
+import com.kotlin.spring.management.configurations.security.userDetails.CustomUserDetails
 import com.kotlin.spring.management.configurations.security.loginLogs.LogInLogDTO
 import com.kotlin.spring.management.configurations.security.loginLogs.LoginLogService
 import com.kotlin.spring.management.dto.user.UserDTO
 import jakarta.servlet.http.HttpServletRequest
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
 
