@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.ui.Model
 
 class ServiceResponse<T>(
-    private val serviceName: String? = null,
-    private val status: String?,
-    private val message: String?,
-    private val errorDetail: String?,
+    val serviceName: String? = null,
+    val status: String?,
+    val message: String?,
+    val errorDetail: String?,
     val data: T?,
     private val booleanAble: Boolean = false
 ): ResponseAdapter {
@@ -82,6 +82,19 @@ class ServiceResponse<T>(
             )
         }
 
+        fun <T> badRequest(
+            serviceName: String? = null,
+            customFailureMessage: String? = null,
+        ) : ServiceResponse<T> {
+            return ServiceResponse(
+                serviceName = serviceName,
+                status = "bad_request",
+                message = customFailureMessage ?: "Error Occurred While Processing Data",
+                errorDetail = customFailureMessage,
+                data = null
+            )
+        }
+
         fun <Boolean> simpleStatus(
             serviceName: String? = null,
             dataSupplier: () -> Boolean?,
@@ -124,6 +137,9 @@ class ServiceResponse<T>(
                 )
             }
         }
+
+
+
     }
 
     fun extractData(): T {
@@ -165,7 +181,7 @@ class ServiceResponse<T>(
         logger.info(this.getLogString())
     }
 
-    override fun adaptForWeb(model: Model, modelName: String) {
+    override fun appendModel(model: Model, modelName: String) {
         model.addAttribute(modelName, data)
     }
 

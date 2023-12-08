@@ -11,11 +11,13 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
@@ -33,13 +35,15 @@ class UserRegistrationController(
 
     @PostMapping("/register")
     fun registerUserAction(
-        @RequestBody(required = true) registrationForm: UserRegistrationForm,
+        @ModelAttribute registrationForm: UserRegistrationForm,
         request: HttpServletRequest,
         response: HttpServletResponse,
         redirectAttr: RedirectAttributes
-    ) {
+    ): String {
         val processingUtil = ProcessingUtil("User Register Process")
-        userRegistrationService.registerNewUser(processingUtil, registrationForm)
+        val process = userRegistrationService.registerNewUser(processingUtil, registrationForm)
+        redirectAttr.addFlashAttribute("resultMessage", process.message)
+        return "/loginPage"
     }
 
     @GetMapping("/exists/{id}")
