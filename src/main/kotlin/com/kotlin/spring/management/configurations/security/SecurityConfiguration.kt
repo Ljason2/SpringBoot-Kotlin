@@ -41,7 +41,9 @@ class SecurityConfiguration(
                 disable()
             }
             authorizeHttpRequests {
-                authorize("/static/**", permitAll)
+                authorize("/css/**", permitAll)
+                authorize("/js/**", permitAll)
+                authorize("/assets/**", permitAll)
 
                 authorize("/login", permitAll)
                 authorize("/api/login", permitAll)
