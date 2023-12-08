@@ -41,11 +41,14 @@ class SecurityConfiguration(
                 disable()
             }
             authorizeHttpRequests {
+                authorize("/static/**", permitAll)
+
                 authorize("/login", permitAll)
                 authorize("/api/login", permitAll)
                 authorize("/user/register/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize("/swagger-ui/**", permitAll)
+
                 authorize("/**", authenticated)
             }
             formLogin {
