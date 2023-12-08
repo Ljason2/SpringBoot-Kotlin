@@ -1,10 +1,374 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Bootstrap 5.3.0 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"  referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/register.css}">
+
+
+    <!-- Custom fonts for this template-->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="bootstrap/scss" rel="stylesheet" type="text/html">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
+    </script>
+
+
+
+
+
     <meta charset="UTF-8">
-    <title>ThymeLeaf</title>
+    <title>사용자 등록</title>
+
+
+
+    <script>
+        $(document).ready(function () {
+            let validationState = {
+                id: false,
+                password: false,
+                passwordCheck: false,
+                name: false,
+                phone: false,
+                email: false,
+                terms: false
+            };
+
+            // 정규표현식
+            const REGEX = {
+                id: /^[a-z][a-z0-9]{3,19}$/,
+                password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}|(?=.*[A-Za-z])(?=.*[^A-Za-z\d])[A-Za-z\W]{10,}|(?=.*\d)(?=.*[^A-Za-z\d])\d[\W\d]{9,}|(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\W]{10,}$/,
+                email: /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                name: /^[가-힣]+$/
+            };
+
+            function updateValidationState(field, isValid) {
+                validationState[field] = isValid;
+                updateRegisterButtonState();
+            }
+
+
+            function updateRegisterButtonState() {
+                // 모든 항목이 충족이 되면 버튼을 활성화시키는 함수
+                // validationState 객체를 배열로 반환하는 매서드
+                // allValid는 배열의 모든 값이 true이면 true가 반환이 됨.
+                const allValid = Object.values(validationState).every(value => value);
+                // 배열의 모든 값이 true이면 회원등록 버튼이 활성화 됨.
+                $("#registerButton").prop("disabled", !allValid);
+                $("#statusMessage").text(allValid ? "" : "모든 필드를 올바르게 입력하세요.");
+            }
+
+            function updateMessage(elementId, isValid, message) {
+                $(elementId).css("color", isValid ? "#008000" : "red").text(message);
+            }
+
+            // ID validation
+            $("#inputUserId").keyup(function () {
+                updateMessage("#idCheckMessage", false, "아이디 중복확인 버튼을 눌러주세요");
+            });
+
+            $("#idCheckButton").click(function (e) {
+                e.preventDefault();
+                $(this).attr("disabled", "disabled");
+                // userId: 내가 타이핑한 id value 값
+
+                const userId = $("#inputUserId").val();
+                const checkUrl = window.location.protocol + '//' + window.location.host + '/user/register/exists/' + userId
+
+                // ID 정규식 검증
+                if (!REGEX.id.test(userId)) {
+                    console.log("정규식 검증");
+                    alert("4 ~ 20글자의 알파벳 소문자로 시작하는 알파벳 소문자 혹은 알파벳 소문자와 숫자의 조합을 입력해주세요");
+                    $(this).removeAttr("disabled");
+                    updateMessage("#idCheckMessage", false, "아이디 작성 규칙에 맞지 않습니다.");
+                    return;
+                } else {
+
+                    /*ResponseVo(
+                                status = this.status,
+                                message = this.message,
+                                errorDetail = this.errorDetail,
+                                data = this.data
+                            )*/
+                    $.ajax({
+                        type: "GET",
+                        url: checkUrl,
+                        success:function(data){
+                            if (data.status === "fail") {
+                                updateValidationState("id", true);
+                                updateMessage("#idCheckMessage", true, "사용 가능한 아이디 입니다.");
+                            } else {
+                                updateValidationState("id", false);
+                                updateMessage("#idCheckMessage", false, "사용 불가능한 아이디 입니다.");
+                            }
+                        },
+                        error: function (error) {
+                            updateMessage("#idCheckMessage", false, "오류 발생. 다시 시도해주세요.");
+                        },
+                        complete: function () {
+                            $("#idCheckButton").removeAttr("disabled");
+                            console.log(`
+                id:${validationState.id},
+                password:${validationState.password},
+                passwordCheck:${validationState.passwordCheck},
+                name:${validationState.name},
+                phone:${validationState.phone},
+                email:${validationState.email},
+                terms:${validationState.terms}
+                `)
+                        }
+                    });
+                }
+
+
+
+            });
+
+            // Password validation
+            $("#inputUserPassword").keyup(function () {
+                const password = $("#userRegisterForm").find("[name=password]").val();
+                const isValid = REGEX.password.test(password);
+                updateValidationState("password", isValid);
+                updateMessage("#passwordMessage", isValid, isValid ? "사용가능한 비밀번호 입니다" : "비밀번호는 최소 10자리 이상 영문 소문자, 숫자, 특수문자 조합이어야 합니다.");
+            });
+
+            // Password Check validation
+            $("#inputUserPasswordCheck").keyup(function () {
+                const password = $("#inputUserPassword").val();
+                const passwordCheck = $("#inputUserPasswordCheck").val();
+                const isValid = password === passwordCheck && REGEX.password.test(password);
+                updateValidationState("passwordCheck", isValid);
+                updateMessage("#passwordCheckMessage", isValid, isValid ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다.");
+            });
+
+            // Name validation
+            $("#inputUserName").keyup(function () {
+                const name = $(this).val();
+                const isValid = REGEX.name.test(name) && name.length >= 1; // 한글 이름이면서 최소 1글자 이상
+                updateValidationState("name", isValid);
+                updateMessage("#nameMessage", isValid, isValid ? "" : "이름은 1글자 이상의 한글이어야 합니다."); // 메시지 업데이트
+            });
+
+            // Phone validation
+            $("#inputUserPhone").keyup(function () {
+                const isValid = $("#inputUserPhone").val().length > 9;
+                updateValidationState("phone", isValid);
+            });
+
+            // Email validation
+            $("#inputUserEmail").keyup(function () {
+                const email = $("#userRegisterForm").find("[name=email]").val();
+                const isValid = REGEX.email.test(email);
+                updateValidationState("email", isValid);
+                updateMessage("#emailCheckMessage", isValid, isValid ? email : "유효한 이메일 주소를 입력해주세요.");
+            });
+
+            // Terms agreement validation
+            $("#agreeTerms").change(function () {
+                updateValidationState("terms", $(this).is(":checked"));
+                if ($("#agreeTerms").is(":checked")) {
+                    alert("가입에 동의하셨습니다.");
+                }
+            });
+
+
+            $("#registerButton").click(function () {
+                if (validationState.id && validationState.password && validationState.passwordCheck && validationState.name && validationState.phone && validationState.email && validationState.terms) {
+                    $("#userRegisterForm").submit();
+                } else {
+                    alert("모든 필드를 올바르게 입력해야 회원가입이 가능합니다.");
+                }
+            });
+
+            if(validationState.terms){
+                if(validationState.id && validationState.password && validationState.passwordCheck && validationState.name && validationState.phone && validationState.email){
+                    registerButton.prop("disabled", false);
+                    registerButton.text("사용자 등록");
+                    statusMessage.text(""); // 상태 메시지 초기화
+                }else {
+                    registerButton.prop("disabled", true);
+                    registerButton.text("약관");
+                    statusMessage.text("모든 필드를 입력하세요."); // 상태 메시지 추가
+                }
+            } else{
+                registerButton.prop("disabled", true);
+                registerButton.text("정보 미입력");
+                statusMessage.text("약관에 동의하세요."); // 상태 메시지 추가
+            }
+
+        });
+    </script>
+
+
 </head>
 <body>
-<h1>사용자등록</h1>
+<div class="wrapper">
+    <div class="container main">
+        <div class="row" style="padding: 80px 0">
+            <div class="col-md right">
+                <div class="back-button-container" style="position: relative;">
+                    <button id="backButton" class="back-button" style="padding-bottom: 4px;margin-bottom: 30px;">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </div>
+                <div class="input-box">
+                    <h1 class="register">사용자 등록</h1>
+                    <form id="userRegisterForm" th:action="@{/user/register/register}" method="post" autocomplete="off">
+                        <!-- Id -->
+                        <div class="form-group" id="idCheckContainer">
+                            <label for="inputUserId">아이디</label>
+                            <div class="input-group">
+                                <input id="inputUserId" type="text" class="form-control" name="id"  placeholder="아이디를 입력하세요" required>
+                                <div class="input-group-append">
+                                    <button id="idCheckButton" class="btn btn-outline-secondary"  type="button">중복체크</button>
+                                </div>
+                            </div>
+                            <div class="guide-text">
+                                <p id="idCheckMessage">4글자 이상의 알파벳 소문자와 숫자 조합</p>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="inputUserPassword">비밀번호</label>
+                            <input type="password" class="form-control" id="inputUserPassword" name="password" placeholder="비밀번호를 입력하세요">
+                            <div class="guide-text">
+                                <span id="passwordMessage">최소10자리 이상의 영어 대소문자, 숫자, 특수문자 중 2종류 조합</span>
+                            </div>
+                        </div>
+
+                        <!-- Password Check-->
+                        <div class="form-group">
+                            <label for="inputUserPasswordCheck">비밀번호 확인</label>
+                            <input type="password" class="form-control" id="inputUserPasswordCheck" name="passwordCheck"  required  placeholder="비밀번호 확인">
+                            <div class="guide-text">
+                                <span id="passwordCheckMessage"></span>
+                            </div>
+                        </div>
+
+                        <!-- name -->
+                        <div class="form-group">
+                            <label for="inputUserName">이름</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" th:value="${userName}" name="name" id="inputUserName" placeholder="이름을 입력하세요" maxlength="12">
+                            </div>
+                            <div class="guide-text">
+                                <span id="nameMessage"></span>
+                            </div>
+                        </div>
+
+
+                        <!-- company -->
+<!--                        <div class="form-group">-->
+<!--                            <label for="inputCompany"> 소속 </label>-->
+<!--                            <select id="inputCompany" class="form-select" aria-label="Default select example" name="company">-->
+<!--                                <option value="소속 없음" selected>소속을 선택하여 주세요.</option>-->
+<!--                                <c:forEach var="company" items="${companyNameList }">-->
+<!--                                    <option value="${company.companyName}">${company.companyName}</option>-->
+<!--                                </c:forEach>-->
+<!--                            </select>-->
+<!--                        </div>-->
+
+
+<!-- position -->
+                        <div class="form-group">
+                            <label for="inputPosition"> 직책 </label>
+                            <select id="inputPosition" class="form-select" aria-label="Default select example" name="position">
+                                <option value="손님">손님</option>
+                                <option value="조사자" disabled>조사자</option>
+                                <option value="관리자" disabled>관리자</option>
+                            </select>
+                        </div>
+
+<!--                        <label for="mng_grade"> 직책 </label>-->
+<!--                        <div class="form-control">-->
+<!--                            <div class="form-check form-check-inline">-->
+<!--                                <input class="form-check-input" name="position" type="checkbox"  value="조사자" >-->
+<!--                                <label class="form-check-label" for="inlineCheckbox1">조사자</label>-->
+<!--                            </div>-->
+<!--                            <div class="form-check form-check-inline">-->
+<!--                                <input class="form-check-input" name="position" type="checkbox"  value="관리자" >-->
+<!--                                <label class="form-check-label" for="inlineCheckbox2">관리자</label>-->
+<!--                            </div>-->
+<!--                            <div class="form-check form-check-inline">-->
+<!--                                <input class="form-check-input" name="position" type="checkbox"  value="결재자" >-->
+<!--                                <label class="form-check-label" for="inlineCheckbox3">결재자</label>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+                        <!-- phone -->
+                        <div class="form-group">
+                            <label for="inputUserPhone"> 연락처 </label>
+                            <div class="input-group">
+                                <input id="inputUserPhone" type="text" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                       required name="phone" maxlength="11" placeholder="하이픈(-)을 제외하고 입력하세요." class="form-control">
+                            </div>
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="inputUserEmail">이메일</label>
+                            <div class="input-group">
+                                <input  id="inputUserEmail" type="email" class="form-control" required name="email" placeholder="example@example.com">
+                            </div>
+                            <div class="guide-text">
+                                <p id="emailCheckMessage" style=""></p>
+                            </div>
+                        </div>
+
+
+                        <!--Terms and Conditions------>
+                        <div class="input-group-append">
+                            <input id="agreeTerms" type="checkbox" required> <span>아래 약관에 모두 동의합니다.</span>
+                        </div>
+
+
+                        <div class="registerButton">
+                            <button  id="registerButton" type="button" class="btn btn-primary" style=" width: 100%; background-color: #1B7618; margin-top: 20px;" disabled>다음</button>
+                        </div>
+
+
+<!--success modal-->
+                        <div class="modal" id="registerSuccessModal" tabindex="-1" aria-hidden="true"  style="text-align: center;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"><i class="bi bi-check-circle"></i>사용자 등록 성공</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>로그인 페이지로 이동합니다.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" th:href="@{/login}" class="btn btn-secondary" data-bs-dismiss="modal">로그인</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>
+
 </body>
 </html>

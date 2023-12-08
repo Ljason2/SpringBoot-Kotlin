@@ -1,0 +1,98 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+.wrapper {
+    max-width: 380px;
+    margin: 100px auto;
+    padding: 15px;
+    background-color:#fff;
+    border-radius: 8px;
+    box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin-heading {
+    text-align: center
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group-addon {
+    z-index: 100;
+    position: absolute;
+    top: 6px;
+    left: 0;
+    font-size: 1.2rem;
+    min-width: 39px;
+    text-align: center;
+}
+
+.form-control {
+    text-indent: 25px;
+    width: 100%;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    z-index: 2;
+}
+
+.btn.btn-primary.btn-block {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #0075DF;
+    color: white;
+    border: none;
+}
+
+
+#signIn {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+.checkbox {
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.checkbox label {
+    font-weight: 400;
+    color: #333;
+}
+
+
