@@ -14,11 +14,11 @@ class ResponseEntityGenerator(){
                 }
 
                 "fail" -> {
-                    ResponseEntity(response, HttpStatus.BAD_REQUEST)
+                    ResponseEntity(response, HttpStatus.OK)
                 }
 
                 "error" -> {
-                    ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR)
+                    ResponseEntity(response, HttpStatus.BAD_REQUEST)
                 }
 
                 else ->{
