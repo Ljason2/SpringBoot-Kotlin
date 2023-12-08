@@ -43,7 +43,7 @@ class UserRegistrationController(
         val processingUtil = ProcessingUtil("User Register Process")
         val process = userRegistrationService.registerNewUser(processingUtil, registrationForm)
         redirectAttr.addFlashAttribute("resultMessage", process.message)
-        return "/loginPage"
+        return "redirect:/loginPage"
     }
 
     @GetMapping("/exists/{id}")
